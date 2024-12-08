@@ -13,7 +13,7 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import models.Item;
 
-public class ViewItemPage {
+public class BuyerViewItemPage {
 	private Stage stage;
 	private Scene scene;
 	private BorderPane borderPane;
@@ -21,7 +21,7 @@ public class ViewItemPage {
 	private ListView<Item> itemListView;
 	private ItemController itemController;
 
-	public ViewItemPage(Stage stage) {
+	public BuyerViewItemPage(Stage stage) {
 		this.stage = stage;
 		initialize();
 		setLayout();
@@ -40,8 +40,12 @@ public class ViewItemPage {
 		Button purchaseButton = new Button("Purchase");
 		purchaseButton.setOnAction(event -> handlePurchase());
 
+		Button backButton = new Button("Back");
+		backButton.setOnAction(event -> handleBack());
+
 		gridPane.add(itemListView, 0, 0);
 		gridPane.add(purchaseButton, 0, 1);
+		gridPane.add(backButton, 0, 2);
 		borderPane.setCenter(gridPane);
 	}
 
@@ -59,6 +63,11 @@ public class ViewItemPage {
 		if (selectedItem != null) {
 			showAlert("Confirm Purchase", "Are you sure you want to purchase this item?");
 		}
+	}
+
+	private void handleBack() {
+		BuyerHomePage previousPage = new BuyerHomePage(stage);
+		stage.setScene(previousPage.getScene());
 	}
 
 	private void showAlert(String title, String message) {

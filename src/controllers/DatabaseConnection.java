@@ -71,4 +71,5 @@ public class DatabaseConnection {
 		createUsersTable();
 		createItemsTable();
 	}
+
 }

@@ -26,16 +26,16 @@ public class BuyerHomePage {
 	private void initialize() {
 		borderPane = new BorderPane();
 		gridPane = new GridPane();
-
+		Button logoutButton = new Button("Logout");
 		viewItemsButton = new Button("View Items");
 		viewWishlistButton = new Button("View Wishlist");
 		viewPurchaseHistoryButton = new Button("View Purchase History");
 
 		viewItemsButton.setOnAction(event -> {
-			ViewItemPage viewItemPage = new ViewItemPage(stage);
+			BuyerViewItemPage viewItemPage = new BuyerViewItemPage(stage);
 			stage.setScene(viewItemPage.getScene());
 		});
-
+		logoutButton.setOnAction(event -> handleLogout());
 //		viewWishlistButton.setOnAction(event -> {
 //			// Open the page for viewing wishlist
 //			new ViewWishlistPage(stage);
@@ -49,7 +49,14 @@ public class BuyerHomePage {
 		gridPane.add(viewItemsButton, 0, 0);
 		gridPane.add(viewWishlistButton, 0, 1);
 		gridPane.add(viewPurchaseHistoryButton, 0, 2);
+		gridPane.add(logoutButton, 0, 3);
 		borderPane.setCenter(gridPane);
+	}
+
+	private void handleLogout() {
+		LoginPage loginPage = new LoginPage(stage);
+		stage.setScene(loginPage.getScene());
+		stage.setTitle("Login - Sustainable Fashion Marketplace");
 	}
 
 	private void setLayout() {

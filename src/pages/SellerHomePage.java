@@ -29,20 +29,27 @@ public class SellerHomePage {
 
 		uploadItemButton = new Button("Upload Item");
 		viewItemsButton = new Button("View My Items");
-
-//		uploadItemButton.setOnAction(event -> {
-//			// Open the page for uploading an item
-//			new UploadItemPage(stage);
-//		});
+		Button logoutButton = new Button("Logout");
+		uploadItemButton.setOnAction(event -> {
+			SellerUploadItemPage uploadPage = new SellerUploadItemPage(stage);
+			stage.setScene(uploadPage.getScene());
+			stage.setTitle("Seller Upload Item Page");
+		});
 //
 //		viewItemsButton.setOnAction(event -> {
-//			// Open the page for viewing uploaded items
 //			new ViewMyItemsPage(stage);
 //		});
-
+		logoutButton.setOnAction(event -> handleLogout());
 		gridPane.add(uploadItemButton, 0, 0);
 		gridPane.add(viewItemsButton, 0, 1);
+		gridPane.add(logoutButton, 0, 2);
 		borderPane.setCenter(gridPane);
+	}
+
+	private void handleLogout() {
+		LoginPage loginPage = new LoginPage(stage);
+		stage.setScene(loginPage.getScene());
+		stage.setTitle("Login - Sustainable Fashion Marketplace");
 	}
 
 	private void setLayout() {

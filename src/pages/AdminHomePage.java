@@ -70,11 +70,13 @@ public class AdminHomePage {
 		Button declineButton = new Button("Decline Item");
 		Button viewOffersButton = new Button("View Offers");
 		Button viewUsersButton = new Button("View Users");
+		Button logoutButton = new Button("Logout");
 
 //		approveButton.setOnAction(event -> handleApproveItem());
 //		declineButton.setOnAction(event -> handleDeclineItem());
 //		viewOffersButton.setOnAction(event -> handleViewOffers());
 //		viewUsersButton.setOnAction(event -> handleViewUsers());
+		logoutButton.setOnAction(event -> handleLogout());
 
 		gridPane.add(new Label("Pending Items"), 0, 0);
 		gridPane.add(pendingItemsListView, 0, 1);
@@ -84,8 +86,15 @@ public class AdminHomePage {
 		gridPane.add(viewUsersButton, 0, 4);
 		gridPane.add(new Label("Registered Users"), 0, 5);
 		gridPane.add(usersListView, 0, 6);
+		gridPane.add(logoutButton, 0, 7);
 
 		borderPane.setCenter(gridPane);
+	}
+
+	private void handleLogout() {
+		LoginPage loginPage = new LoginPage(stage);
+		stage.setScene(loginPage.getScene());
+		stage.setTitle("Login - Sustainable Fashion Marketplace");
 	}
 
 	private void setLayout() {

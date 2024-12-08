@@ -21,6 +21,7 @@ public class Main extends Application {
 		db.migrateTables();
 		userController.insertDefaultUsers();
 		itemController.insertDefaultItems();
+
 	}
 
 	@Override
@@ -31,5 +32,4 @@ public class Main extends Application {
 		arg0.setScene(loginPage.getScene());
 		arg0.show();
 	}
-
 }
