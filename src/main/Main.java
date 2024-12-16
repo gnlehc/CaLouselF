@@ -5,7 +5,7 @@ import controllers.ItemController;
 import controllers.UserController;
 import javafx.application.Application;
 import javafx.stage.Stage;
-import pages.LoginPage;
+import views.LoginPage;
 
 public class Main extends Application {
 	private DatabaseConnection db = new DatabaseConnection();

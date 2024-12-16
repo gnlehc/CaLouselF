@@ -1,4 +1,4 @@
-package pages;
+package views;
 
 import controllers.ItemController;
 import controllers.WishListController;

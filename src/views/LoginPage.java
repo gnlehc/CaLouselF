@@ -1,4 +1,4 @@
-package pages;
+package views;
 
 import controllers.UserController;
 import javafx.event.EventHandler;
