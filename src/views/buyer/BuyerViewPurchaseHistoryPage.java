@@ -58,14 +58,6 @@ public class BuyerViewPurchaseHistoryPage {
         transactionIdCol.setCellValueFactory(data -> 
             new SimpleStringProperty(String.format("%d", data.getValue().getTransactionId())));
         
-        TableColumn<Transaction, String> userIdCol = new TableColumn<>("User Id");
-        userIdCol.setCellValueFactory(data -> 
-            new SimpleStringProperty(String.format("%d", data.getValue().getUserId())));
-        
-        TableColumn<Transaction, String> itemIdCol = new TableColumn<>("Item Id");
-        itemIdCol.setCellValueFactory(data -> 
-            new SimpleStringProperty(String.format("%d", data.getValue().getItemId())));
-        
         TableColumn<Transaction, String> itemNameCol = new TableColumn<>("Item Name");
         itemNameCol.setCellValueFactory(data -> 
             new SimpleStringProperty(data.getValue().getItem().getName()));
@@ -82,15 +74,7 @@ public class BuyerViewPurchaseHistoryPage {
         itemPriceCol.setCellValueFactory(data -> 
             new SimpleStringProperty(String.format("%.2f", data.getValue().getItem().getPrice())));
         
-        TableColumn<Transaction, String> itemStatusCol = new TableColumn<>("Item Status");
-        itemStatusCol.setCellValueFactory(data -> 
-            new SimpleStringProperty(data.getValue().getItem().getStatus()));
-        
-        TableColumn<Transaction, String> sellerIdCol = new TableColumn<>("Seller Id");
-        sellerIdCol.setCellValueFactory(data -> 
-            new SimpleStringProperty(String.format("%d", data.getValue().getItem().getSellerId())));
-        
-        tableView.getColumns().addAll(transactionIdCol, userIdCol, itemIdCol, itemNameCol, itemCategoryCol, itemSizeCol, itemPriceCol, itemStatusCol, sellerIdCol);
+        tableView.getColumns().addAll(transactionIdCol, itemNameCol, itemCategoryCol, itemSizeCol, itemPriceCol);
         
         tableView.setItems(transactions);
         

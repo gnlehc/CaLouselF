@@ -59,20 +59,24 @@ public class BuyerViewWishListPage {
         VBox vbox = new VBox(10);
         vbox.setPadding(new Insets(10));
         
-        TableColumn<Item, String> nameCol = new TableColumn<>("Name");
-        nameCol.setCellValueFactory(data -> 
+        TableColumn<Item, String> itemNameCol = new TableColumn<>("Item Name");
+        itemNameCol.setCellValueFactory(data -> 
             new SimpleStringProperty(data.getValue().getName()));
         
-        TableColumn<Item, String> categoryCol = new TableColumn<>("Category");
-        categoryCol.setCellValueFactory(data -> 
+        TableColumn<Item, String> itemCategoryCol = new TableColumn<>("Item Category");
+        itemCategoryCol.setCellValueFactory(data -> 
             new SimpleStringProperty(data.getValue().getCategory()));
         
-        TableColumn<Item, String> priceCol = new TableColumn<>("Price");
-        priceCol.setCellValueFactory(data -> 
-            new SimpleStringProperty(String.format("$%.2f", data.getValue().getPrice())));
+        TableColumn<Item, String> itemSizeCol = new TableColumn<>("Item Size");
+        itemSizeCol.setCellValueFactory(data -> 
+            new SimpleStringProperty(data.getValue().getSize()));
         
-        TableColumn<Item, Void> removeCol = new TableColumn<>("Remove");
-        removeCol.setCellFactory(col -> {
+        TableColumn<Item, String> itemPriceCol = new TableColumn<>("Item Price");
+        itemPriceCol.setCellValueFactory(data -> 
+            new SimpleStringProperty(String.format("%.2f", data.getValue().getPrice())));
+        
+        TableColumn<Item, Void> removeItemCol = new TableColumn<>("Remove Item");
+        removeItemCol.setCellFactory(col -> {
             TableCell<Item, Void> cell = new TableCell<>() {
                 private final Button removeBtn = new Button("Remove");
                 {
@@ -91,7 +95,7 @@ public class BuyerViewWishListPage {
             return cell;
         });
         
-        tableView.getColumns().addAll(nameCol, categoryCol, priceCol, removeCol);
+        tableView.getColumns().addAll(itemNameCol, itemCategoryCol, itemSizeCol, itemPriceCol, removeItemCol);
         refreshTableData();
         
         Button refreshBtn = new Button("Refresh");
