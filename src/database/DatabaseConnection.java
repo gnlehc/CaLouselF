@@ -69,7 +69,7 @@ public class DatabaseConnection {
 	}
 
 	public void createWishlistTable() {
-		String query = "CREATE TABLE IF NOT EXISTS wishlist (" + "wishlist_id INT AUTO_INCREMENT PRIMARY KEY, "
+		String query = "CREATE TABLE IF NOT EXISTS wishlists (" + "wishlist_id INT AUTO_INCREMENT PRIMARY KEY, "
 				+ "user_id INT NOT NULL, " + "item_id INT NOT NULL, "
 				+ "FOREIGN KEY (user_id) REFERENCES users(user_id), "
 				+ "FOREIGN KEY (item_id) REFERENCES items(item_id))";
@@ -81,9 +81,21 @@ public class DatabaseConnection {
 	}
 
 	public void createItemDeclineLogTable() {
-		String query = "CREATE TABLE IF NOT EXISTS item_decline_log (\n"
+		String query = "CREATE TABLE IF NOT EXISTS item_decline_logs (\n"
 				+ "		    log_id INT AUTO_INCREMENT PRIMARY KEY,\n" + "		    item_id INT NOT NULL,\n"
 				+ "		    reason TEXT NOT NULL)";
+		try {
+			exec(query);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void createTransactionTable() {
+		String query = "CREATE TABLE IF NOT EXISTS transactions (" + "transaction_id INT AUTO_INCREMENT PRIMARY KEY, "
+				+ "user_id INT NOT NULL, " + "item_id INT NOT NULL, "
+				+ "FOREIGN KEY (user_id) REFERENCES users(user_id), "
+				+ "FOREIGN KEY (item_id) REFERENCES items(item_id))";
 		try {
 			exec(query);
 		} catch (Exception e) {
@@ -96,6 +108,7 @@ public class DatabaseConnection {
 		createItemsTable();
 		createWishlistTable();
 		createItemDeclineLogTable();
+		createTransactionTable();
 	}
 
 }
