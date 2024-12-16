@@ -21,7 +21,6 @@ public class DatabaseConnection {
 			connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/calouselfdb", "root", "");
 			statement = connection.createStatement();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

@@ -30,14 +30,11 @@ public class WishListController {
 			int rowsInserted = stmt.executeUpdate();
 
 			if (rowsInserted > 0) {
-				System.out.println("Item added to wishlist successfully.");
 				return true;
 			} else {
-				System.err.println("Failed to insert item into wishlist.");
 				return false;
 			}
 		} catch (SQLException e) {
-			System.err.println("Error while adding to wishlist: " + e.getMessage());
 			e.printStackTrace();
 			return false;
 		}
@@ -80,15 +77,13 @@ public class WishListController {
 
 	public boolean removeFromWishlist(int userId, int itemId) {
 	    String query = "DELETE FROM wishlists WHERE user_id = ? AND item_id = ?";
-	    try {  // Debugging statement
+	    try {
 	        PreparedStatement ps = db.connection.prepareStatement(query);
 	        ps.setInt(1, userId);
 	        ps.setInt(2,itemId);
 	        int result = ps.executeUpdate();
-	        System.out.println("Rows affected: " + result);  // Debugging the number of affected rows
-	        return result == 1;  // If 1 row is affected, the delete was successful
+	        return result > 0;
 	    } catch (SQLException e) {
-	        System.out.println("Error removing item: " + e.getMessage());
 	        e.printStackTrace();
 	        return false;
 	    }

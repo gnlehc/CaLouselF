@@ -49,13 +49,11 @@ public class LoginPage {
 		passwordfield = new PasswordField();
 		loginButton = new Button("Login");
 
-		// New register link label
 		registerLabel = new Label("Don't have an account yet? Register here");
 
 		EventHandler<MouseEvent> loginEvent = event -> handleLogin();
 		loginButton.addEventHandler(MouseEvent.MOUSE_CLICKED, loginEvent);
 
-		// Event for register label
 		EventHandler<MouseEvent> registerEvent = event -> openRegisterPage();
 		registerLabel.addEventHandler(MouseEvent.MOUSE_CLICKED, registerEvent);
 		registerLabel.setStyle("-fx-text-fill: blue; -fx-cursor: hand;");

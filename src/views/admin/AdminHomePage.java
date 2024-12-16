@@ -95,7 +95,6 @@ public class AdminHomePage {
 		try {
 			success = itemController.approveItem(selectedItem.getItemId());
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
         if (success) {

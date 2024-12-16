@@ -21,7 +21,6 @@ public class UserController {
 	}
 
 	public Boolean Register(User user) {
-		// validate if user already exists
 		if (checkUserExists(user)) {
 			return false;
 		}
@@ -112,7 +111,6 @@ public class UserController {
 
 		try (Statement stmt = db.connection.createStatement(); ResultSet rs = stmt.executeQuery(query)) {
 			while (rs.next()) {
-				// Creating User object from DB result
 				User user = new User(rs.getString("username"), rs.getString("password"), rs.getString("phone_number"),
 						rs.getString("address"), rs.getString("role"));
 				user.setId(rs.getInt("user_id"));
