@@ -65,17 +65,17 @@ public class BuyerViewItemPage {
 	}
 	
 	private void handleAddToWishlist() {
-	    Item selectedItem = itemListView.getSelectionModel().getSelectedItem();
-	      if (selectedItem != null) {
-	         boolean success = wishListController.addToWishlist(selectedItem, loggedUser.getId());
-	         if (success) {
-	        	 Optional<ButtonType> result = showAlert("Wishlist Updated", "Item added to your wishlist.");
-	         } else {
-	        	 Optional<ButtonType> result = showAlert("Error", "Failed to add the item to your wishlist. Please try again.");
-	         }
-	     } else {
-	    	 Optional<ButtonType> result = showAlert("No Item Selected", "Please select an item to add to your wishlist.");
-	     }
+		Item selectedItem = itemListView.getSelectionModel().getSelectedItem();
+		if (selectedItem != null) {
+			boolean response = wishListController.addToWishlist(selectedItem, loggedUser.getId());
+		     if (response) {
+		    	 showAlert("Wishlist Updated", "Item added to your wishlist.");
+		     } else {
+		    	 showAlert("Error", "Failed to add the item to your wishlist. Please try again.");
+		     }
+		 } else {
+			 showAlert("No Item Selected", "Please select an item to add to your wishlist.");
+		 }
 	}
 	
 	private void setLayout() {
@@ -90,18 +90,20 @@ public class BuyerViewItemPage {
 	private void handlePurchase() {
 		Item selectedItem = itemListView.getSelectionModel().getSelectedItem();
 		if (selectedItem != null) {
-			Optional<ButtonType> result = showAlert("Confirm Purchase", "Are you sure you want to purchase this item?");
+			Optional<ButtonType> result = showConfirmation("Confirm Purchase", "Are you sure you want to purchase this item?");
 			
 			if (result.isPresent()) {
 				if (result.get() == ButtonType.YES) {
 					boolean response = transactionController.purchaseItem(loggedUser.getId(), selectedItem.getItemId());
 					if (response == true) {
-						showResponseAlert("Success", "Item purchased successfully and moved to purchase history.");
+						showAlert("Success", "Item purchased successfully and moved to purchase history.");
 					} else {
-						showResponseAlert("Error", "An error occurred while purchasing the item. Please try again.");
+						showAlert("Error", "An error occurred while purchasing the item. Please try again.");
 					}
 				}
 			}
+		} else {
+			showAlert("No Item Selected", "Please select an item to purchase.");
 		}
 	}
 
@@ -110,13 +112,13 @@ public class BuyerViewItemPage {
 		stage.setScene(previousPage.getScene());
 	}
 
-	private Optional<ButtonType> showAlert(String title, String message) {
+	private Optional<ButtonType> showConfirmation(String title, String message) {
 		Alert alert = new Alert(Alert.AlertType.CONFIRMATION, message, ButtonType.YES, ButtonType.NO);
 		alert.setTitle(title);
 		return alert.showAndWait();
 	}
 	
-	private void showResponseAlert(String title, String message) {
+	private void showAlert(String title, String message) {
 		Alert alert = new Alert(Alert.AlertType.INFORMATION);
 		alert.setTitle(title);
 		alert.setHeaderText(null);
