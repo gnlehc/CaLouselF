@@ -5,8 +5,7 @@ public class Transaction {
 	private int userId;
 	private int itemId;
 	
-	public Transaction(int transactionId, int userId, int itemId) {
-		this.transactionId = transactionId;
+	public Transaction(int userId, int itemId) {
 		this.userId = userId;
 		this.itemId = itemId;
 	}
@@ -38,17 +37,5 @@ public class Transaction {
 	@Override
 	public String toString() {
 		return "Transaction [transactionId=" + transactionId + ", userId=" + userId + ", itemId=" + itemId + "]";
-	}
-
-	public static boolean purchaseItem(int userId, int itemId) {
-		return true;
-	}
-	
-	public void viewHistory(int userId) {
-		
-	}
-	
-	public void createTransaction(int transactionId) {
-		
 	}
 }

@@ -22,7 +22,7 @@ public class WishListController {
 			return false;
 		}
 
-		String query = "INSERT INTO wishlist (user_id, item_id) VALUES (?, ?)";
+		String query = "INSERT INTO wishlists (user_id, item_id) VALUES (?, ?)";
 		try (PreparedStatement stmt = db.connection.prepareStatement(query)) {
 			stmt.setInt(1, userId);
 			stmt.setInt(2, item.getItemId());
@@ -44,7 +44,7 @@ public class WishListController {
 	}
 
 	public boolean isItemInWishlist(String userId, String itemId) {
-		String query = "SELECT * FROM wishlist WHERE user_id = ? AND item_id = ?";
+		String query = "SELECT * FROM wishlists WHERE user_id = ? AND item_id = ?";
 		try {
 			PreparedStatement ps = db.connection.prepareStatement(query);
 			ps.setString(1, userId);
@@ -59,7 +59,7 @@ public class WishListController {
 
 	public ArrayList<Item> getWishlistItems(int userId) {
 		ArrayList<Item> items = new ArrayList<>();
-		String query = "SELECT i.* FROM items i JOIN wishlist w ON i.item_id = w.item_id WHERE w.user_id = ?";
+		String query = "SELECT i.* FROM items i JOIN wishlists w ON i.item_id = w.item_id WHERE w.user_id = ?";
 
 		try {
 			PreparedStatement ps = db.connection.prepareStatement(query);
@@ -78,7 +78,7 @@ public class WishListController {
 	}
 
 	public boolean removeFromWishlist(int UserId, int itemId) {
-		String query = "DELETE FROM wishlist WHERE user_id = ? AND item_id = ?";
+		String query = "DELETE FROM wishlists WHERE user_id = ? AND item_id = ?";
 		try {
 			PreparedStatement ps = db.connection.prepareStatement(query);
 			ps.setLong(1, UserId);

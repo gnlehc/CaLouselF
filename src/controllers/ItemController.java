@@ -198,7 +198,7 @@ public class ItemController {
 	}
 
 	private void logDeclineReason(int itemId, String reason) {
-		String query = "INSERT INTO item_decline_log (item_id, reason) VALUES (?, ?)";
+		String query = "INSERT INTO item_decline_logs (item_id, reason) VALUES (?, ?)";
 		try (PreparedStatement stmt = db.connection.prepareStatement(query)) {
 			stmt.setInt(1, itemId);
 			stmt.setString(2, reason);
