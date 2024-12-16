@@ -207,6 +207,10 @@ public class ItemController {
 			e.printStackTrace();
 		}
 	}
+	
+	public void deleteItem(int itemId) {
+		
+	}
 
 	private void showAlert(String title, String message) {
 		Alert alert = new Alert(Alert.AlertType.INFORMATION);
