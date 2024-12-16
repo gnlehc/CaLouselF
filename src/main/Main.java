@@ -1,11 +1,11 @@
 package main;
 
-import controllers.DatabaseConnection;
 import controllers.ItemController;
 import controllers.UserController;
+import database.DatabaseConnection;
 import javafx.application.Application;
 import javafx.stage.Stage;
-import views.LoginPage;
+import views.auth.LoginPage;
 
 public class Main extends Application {
 	private DatabaseConnection db = new DatabaseConnection();

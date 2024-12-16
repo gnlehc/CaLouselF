@@ -1,4 +1,4 @@
-package views;
+package views.buyer;
 import controllers.WishListController;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.geometry.Insets;

@@ -1,6 +1,9 @@
-package views;
+package views.buyer;
+
+import java.util.Optional;
 
 import controllers.ItemController;
+import controllers.TransactionController;
 import controllers.WishListController;
 import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
@@ -22,12 +25,14 @@ public class BuyerViewItemPage {
 	private GridPane gridPane;
 	private ListView<Item> itemListView;
 	private ItemController itemController;
+	private TransactionController transactionController;
 	private WishListController wishListController;
 	private User loggedUser;
 	
 	public BuyerViewItemPage(Stage stage, User loggedUser) {
 		this.stage = stage;
 		this.loggedUser = loggedUser;
+		this.transactionController = new TransactionController();
 		initialize();
 		setLayout();
 		setAlignment();
@@ -58,19 +63,21 @@ public class BuyerViewItemPage {
 		gridPane.add(backButton, 0, 3);
 		borderPane.setCenter(gridPane);
 	}
-	 private void handleAddToWishlist() {
+	
+	private void handleAddToWishlist() {
 	    Item selectedItem = itemListView.getSelectionModel().getSelectedItem();
 	      if (selectedItem != null) {
 	         boolean success = wishListController.addToWishlist(selectedItem, loggedUser.getId());
 	         if (success) {
-	            showAlert("Wishlist Updated", "Item added to your wishlist.");
+	        	 Optional<ButtonType> result = showAlert("Wishlist Updated", "Item added to your wishlist.");
 	         } else {
-	            showAlert("Error", "Failed to add the item to your wishlist. Please try again.");
+	        	 Optional<ButtonType> result = showAlert("Error", "Failed to add the item to your wishlist. Please try again.");
 	         }
 	     } else {
-	        showAlert("No Item Selected", "Please select an item to add to your wishlist.");
+	    	 Optional<ButtonType> result = showAlert("No Item Selected", "Please select an item to add to your wishlist.");
 	     }
 	}
+	
 	private void setLayout() {
 		gridPane.setHgap(10);
 		gridPane.setVgap(10);
@@ -83,7 +90,18 @@ public class BuyerViewItemPage {
 	private void handlePurchase() {
 		Item selectedItem = itemListView.getSelectionModel().getSelectedItem();
 		if (selectedItem != null) {
-			showAlert("Confirm Purchase", "Are you sure you want to purchase this item?");
+			Optional<ButtonType> result = showAlert("Confirm Purchase", "Are you sure you want to purchase this item?");
+			
+			if (result.isPresent()) {
+				if (result.get() == ButtonType.YES) {
+					boolean response = transactionController.purchaseItem(loggedUser.getId(), selectedItem.getItemId());
+					if (response == true) {
+						showResponseAlert("Success", "Item purchased successfully and moved to purchase history.");
+					} else {
+						showResponseAlert("Error", "An error occurred while purchasing the item. Please try again.");
+					}
+				}
+			}
 		}
 	}
 
@@ -92,9 +110,17 @@ public class BuyerViewItemPage {
 		stage.setScene(previousPage.getScene());
 	}
 
-	private void showAlert(String title, String message) {
+	private Optional<ButtonType> showAlert(String title, String message) {
 		Alert alert = new Alert(Alert.AlertType.CONFIRMATION, message, ButtonType.YES, ButtonType.NO);
 		alert.setTitle(title);
+		return alert.showAndWait();
+	}
+	
+	private void showResponseAlert(String title, String message) {
+		Alert alert = new Alert(Alert.AlertType.INFORMATION);
+		alert.setTitle(title);
+		alert.setHeaderText(null);
+		alert.setContentText(message);
 		alert.showAndWait();
 	}
 

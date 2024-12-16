@@ -1,15 +1,17 @@
 package controllers;
 
+import models.Transaction;
+
 public class TransactionController {
-	public boolean purchaseItems(String userId, String itemId) {
-		return true;
+	public boolean purchaseItem(int userId, int itemId) {
+		return Transaction.purchaseItem(userId, itemId);
 	}
 	
-	public void viewHistory(String userId) {
+	public void viewHistory(int userId) {
 		
 	}
 	
-	public void createTransaction(String transactionId) {
+	public void createTransaction(int transactionId) {
 		
 	}
 }

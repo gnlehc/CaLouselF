@@ -1,4 +1,4 @@
-package views;
+package views.seller;
 
 import controllers.ItemController;
 import javafx.geometry.Insets;

@@ -1,54 +1,54 @@
 package models;
 
 public class Transaction {
-	private String userId;
-	private String itemId;
-	private String transactionId;
+	private int transactionId;
+	private int userId;
+	private int itemId;
 	
-	public Transaction(String userId, String itemId, String transactionId) {
-		this.userId = userId;
-		this.itemId = itemId;
+	public Transaction(int transactionId, int userId, int itemId) {
 		this.transactionId = transactionId;
-	}
-
-	public String getUserId() {
-		return userId;
-	}
-
-	public void setUserId(String userId) {
 		this.userId = userId;
-	}
-
-	public String getItemId() {
-		return itemId;
-	}
-
-	public void setItemId(String itemId) {
 		this.itemId = itemId;
 	}
-
-	public String getTransactionId() {
+	
+	public int getTransactionId() {
 		return transactionId;
 	}
 
-	public void setTransactionId(String transactionId) {
+	public void setTransactionId(int transactionId) {
 		this.transactionId = transactionId;
 	}
-	
+
+	public int getUserId() {
+		return userId;
+	}
+
+	public void setUserId(int userId) {
+		this.userId = userId;
+	}
+
+	public int getItemId() {
+		return itemId;
+	}
+
+	public void setItemId(int itemId) {
+		this.itemId = itemId;
+	}
+
 	@Override
 	public String toString() {
-		return "Transaction [userId=" + userId + ", itemId=" + itemId + ", transactionId=" + transactionId + "]";
+		return "Transaction [transactionId=" + transactionId + ", userId=" + userId + ", itemId=" + itemId + "]";
 	}
-	
-	public boolean purchaseItems(String userId, String itemId) {
+
+	public static boolean purchaseItem(int userId, int itemId) {
 		return true;
 	}
 	
-	public void viewHistory(String userId) {
+	public void viewHistory(int userId) {
 		
 	}
 	
-	public void createTransaction(String transactionId) {
+	public void createTransaction(int transactionId) {
 		
 	}
 }

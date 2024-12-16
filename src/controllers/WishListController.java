@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import database.DatabaseConnection;
 import models.Item;
 
 public class WishListController {

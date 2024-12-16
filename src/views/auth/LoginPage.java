@@ -1,4 +1,4 @@
-package views;
+package views.auth;
 
 import controllers.UserController;
 import javafx.event.EventHandler;
@@ -15,6 +15,9 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import models.User;
+import views.admin.AdminHomePage;
+import views.buyer.BuyerHomePage;
+import views.seller.SellerHomePage;
 
 public class LoginPage {
 	private Stage stage;

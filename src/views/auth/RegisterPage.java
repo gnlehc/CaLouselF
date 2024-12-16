@@ -1,4 +1,4 @@
-package views;
+package views.auth;
 
 import controllers.UserController;
 import javafx.event.EventHandler;

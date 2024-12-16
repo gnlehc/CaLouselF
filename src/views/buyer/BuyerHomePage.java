@@ -1,4 +1,4 @@
-package views;
+package views.buyer;
 
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -7,19 +7,20 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import models.User;
+import views.auth.LoginPage;
 
-public class SellerHomePage {
+public class BuyerHomePage {
 	private Stage stage;
 	private Scene scene;
 	private BorderPane borderPane;
 	private GridPane gridPane;
-	private Button uploadItemButton, viewItemsButton, editItemButton;
-	private User seller;
-
-	public SellerHomePage(Stage stage, User seller) {
+	private Button viewItemsButton, viewWishlistButton, viewPurchaseHistoryButton;
+	private User loggedInUser;
+	
+	public BuyerHomePage(Stage stage, User loggedInUser) {
 		this.stage = stage;
-		this.seller = seller;
-		this.stage.setTitle("Seller Home");
+		this.loggedInUser = loggedInUser;
+		this.stage.setTitle("Buyer Home");
 		initialize();
 		setLayout();
 		setAlignment();
@@ -29,33 +30,30 @@ public class SellerHomePage {
 	private void initialize() {
 		borderPane = new BorderPane();
 		gridPane = new GridPane();
-
-		uploadItemButton = new Button("Upload Item");
-		viewItemsButton = new Button("View My Items");
-		editItemButton = new Button("edit Item");
-
 		Button logoutButton = new Button("Logout");
-
-		uploadItemButton.setOnAction(event -> {
-			SellerUploadItemPage uploadPage = new SellerUploadItemPage(stage, seller);
-			stage.setScene(uploadPage.getScene());
-			stage.setTitle("Seller Upload Item Page");
-		});
+		viewItemsButton = new Button("View Items");
+		viewWishlistButton = new Button("View Wishlist");
+		viewPurchaseHistoryButton = new Button("View Purchase History");
 
 		viewItemsButton.setOnAction(event -> {
-			SellerViewMyItemPage sellerViewMyItemPage = new SellerViewMyItemPage(stage, seller);
-			stage.setScene(sellerViewMyItemPage.getScene());
-
+			BuyerViewItemPage viewItemPage = new BuyerViewItemPage(stage, loggedInUser);
+			stage.setScene(viewItemPage.getScene());
 		});
-
-		editItemButton.setOnAction(event -> {
-
-		});
-
 		logoutButton.setOnAction(event -> handleLogout());
-		gridPane.add(uploadItemButton, 0, 0);
-		gridPane.add(viewItemsButton, 0, 1);
-		gridPane.add(logoutButton, 0, 2);
+		viewWishlistButton.setOnAction(event -> {
+			BuyerViewWishListPage wishlistPage = new BuyerViewWishListPage(stage, loggedInUser);
+			stage.setScene(wishlistPage.getScene());
+		});
+//
+//		viewPurchaseHistoryButton.setOnAction(event -> {
+//			// Open the page for viewing purchase history
+//			new ViewPurchaseHistoryPage(stage);
+//		});
+
+		gridPane.add(viewItemsButton, 0, 0);
+		gridPane.add(viewWishlistButton, 0, 1);
+		gridPane.add(viewPurchaseHistoryButton, 0, 2);
+		gridPane.add(logoutButton, 0, 3);
 		borderPane.setCenter(gridPane);
 	}
 

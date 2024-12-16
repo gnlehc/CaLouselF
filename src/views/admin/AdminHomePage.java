@@ -1,4 +1,4 @@
-package views;
+package views.admin;
 
 import controllers.ItemController;
 import javafx.geometry.Insets;
@@ -10,6 +10,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import models.Item;
+import views.auth.LoginPage;
 
 public class AdminHomePage {
     private Stage stage;
