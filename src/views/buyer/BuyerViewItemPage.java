@@ -32,6 +32,7 @@ public class BuyerViewItemPage {
 	public BuyerViewItemPage(Stage stage, User loggedUser) {
 		this.stage = stage;
 		this.loggedUser = loggedUser;
+		this.transactionController = new TransactionController();
 		initialize();
 		setLayout();
 		setAlignment();
@@ -41,7 +42,6 @@ public class BuyerViewItemPage {
 	private void initialize() {
 		itemController = new ItemController();
 		wishListController = new WishListController();
-		transactionController = new TransactionController();
 		borderPane = new BorderPane();
 		gridPane = new GridPane();
 

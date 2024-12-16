@@ -1,6 +1,5 @@
 package views.buyer;
 
-import controllers.TransactionController;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -17,7 +16,6 @@ public class BuyerHomePage {
 	private GridPane gridPane;
 	private Button viewItemsButton, viewWishlistButton, viewPurchaseHistoryButton;
 	private User loggedInUser;
-	private TransactionController transactionController;
 	
 	public BuyerHomePage(Stage stage, User loggedInUser) {
 		this.stage = stage;
@@ -36,24 +34,21 @@ public class BuyerHomePage {
 		viewItemsButton = new Button("View Items");
 		viewWishlistButton = new Button("View Wishlist");
 		viewPurchaseHistoryButton = new Button("View Purchase History");
-		transactionController = new TransactionController();
 
 		viewItemsButton.setOnAction(event -> {
 			BuyerViewItemPage viewItemPage = new BuyerViewItemPage(stage, loggedInUser);
 			stage.setScene(viewItemPage.getScene());
 		});
-		
+		logoutButton.setOnAction(event -> handleLogout());
 		viewWishlistButton.setOnAction(event -> {
 			BuyerViewWishListPage wishlistPage = new BuyerViewWishListPage(stage, loggedInUser);
 			stage.setScene(wishlistPage.getScene());
 		});
-
-		viewPurchaseHistoryButton.setOnAction(event -> {
-			BuyerViewPurchaseHistoryPage purchaseHistoryPage = new BuyerViewPurchaseHistoryPage(stage, loggedInUser, transactionController.viewHistory(loggedInUser.getId()));
-			stage.setScene(purchaseHistoryPage.getScene());
-		});
-		
-		logoutButton.setOnAction(event -> handleLogout());
+//
+//		viewPurchaseHistoryButton.setOnAction(event -> {
+//			// Open the page for viewing purchase history
+//			new ViewPurchaseHistoryPage(stage);
+//		});
 
 		gridPane.add(viewItemsButton, 0, 0);
 		gridPane.add(viewWishlistButton, 0, 1);

@@ -15,6 +15,8 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import models.Item;
 import models.User;
+import models.WishList;
+import models.WishList.Wishlist;
 
 public class BuyerViewWishListPage {
 
@@ -105,7 +107,8 @@ public class BuyerViewWishListPage {
     }
     
     private void handleRemoveFromWishlist(Item item) {
-    	System.out.println(buyer.getId());
+          // Debugging statement
+    	System.out.println(item);
         if(wishlistController.removeFromWishlist(buyer.getId(), item.getItemId())) {
             refreshTableData();
             showAlert("Success", "Item removed from wishlist!", Alert.AlertType.INFORMATION);
