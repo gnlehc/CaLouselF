@@ -105,7 +105,6 @@ public class BuyerViewWishListPage {
     }
     
     private void handleRemoveFromWishlist(Item item) {
-    	System.out.println(buyer.getId());
         if(wishlistController.removeFromWishlist(buyer.getId(), item.getItemId())) {
             refreshTableData();
             showAlert("Success", "Item removed from wishlist!", Alert.AlertType.INFORMATION);

@@ -69,6 +69,7 @@ public class WishListController {
 			while (rs.next()) {
 				Item item = new Item(rs.getString("name"), rs.getString("category"), rs.getString("size"),
 						rs.getDouble("price"), rs.getString("status"), rs.getInt("sellerId"));
+				item.setItemId(rs.getInt("item_id"));
 				items.add(item);
 			}
 		} catch (SQLException e) {
@@ -77,17 +78,20 @@ public class WishListController {
 		return items;
 	}
 
-	public boolean removeFromWishlist(int UserId, int itemId) {
-		String query = "DELETE FROM wishlists WHERE user_id = ? AND item_id = ?";
-		try {
-			PreparedStatement ps = db.connection.prepareStatement(query);
-			ps.setLong(1, UserId);
-			ps.setLong(2, itemId);
-			return ps.executeUpdate() == 1;
-		} catch (SQLException e) {
-			e.printStackTrace();
-			return false;
-		}
+	public boolean removeFromWishlist(int userId, int itemId) {
+	    String query = "DELETE FROM wishlists WHERE user_id = ? AND item_id = ?";
+	    try {  // Debugging statement
+	        PreparedStatement ps = db.connection.prepareStatement(query);
+	        ps.setInt(1, userId);
+	        ps.setInt(2,itemId);
+	        int result = ps.executeUpdate();
+	        System.out.println("Rows affected: " + result);  // Debugging the number of affected rows
+	        return result == 1;  // If 1 row is affected, the delete was successful
+	    } catch (SQLException e) {
+	        System.out.println("Error removing item: " + e.getMessage());
+	        e.printStackTrace();
+	        return false;
+	    }
 	}
 
 }
