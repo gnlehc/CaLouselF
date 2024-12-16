@@ -35,6 +35,11 @@ public class Transaction {
 		this.transactionId = transactionId;
 	}
 	
+	@Override
+	public String toString() {
+		return "Transaction [userId=" + userId + ", itemId=" + itemId + ", transactionId=" + transactionId + "]";
+	}
+	
 	public boolean purchaseItems(String userId, String itemId) {
 		return true;
 	}
