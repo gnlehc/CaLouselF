@@ -1,4 +1,7 @@
 package views.buyer;
+import java.util.Optional;
+
+import controllers.TransactionController;
 import controllers.WishListController;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.geometry.Insets;
@@ -6,6 +9,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
@@ -22,12 +26,14 @@ public class BuyerViewWishListPage {
     private Scene scene;
     private User buyer;
     private WishListController wishlistController;
+    private TransactionController transactionController;
     private TableView<Item> tableView;
     
     public BuyerViewWishListPage(Stage stage, User buyer) {
         this.stage = stage;
         this.buyer = buyer;
         this.wishlistController = new WishListController();
+        this.transactionController = new TransactionController();
         this.tableView = new TableView<>();
         initializeView();
     }
@@ -95,7 +101,27 @@ public class BuyerViewWishListPage {
             return cell;
         });
         
-        tableView.getColumns().addAll(itemNameCol, itemCategoryCol, itemSizeCol, itemPriceCol, removeItemCol);
+        TableColumn<Item, Void> purchaseItemCol = new TableColumn<>("Purchase Item");
+        purchaseItemCol.setCellFactory(col -> {
+            TableCell<Item, Void> cell = new TableCell<>() {
+                private final Button purchaseBtn = new Button("Purchase");
+                {
+                	purchaseBtn.setOnAction(e -> {
+                        Item item = getTableView().getItems().get(getIndex());
+                        handlePurchaseFromWishlist(item);
+                    });
+                }
+                
+                @Override
+                protected void updateItem(Void item, boolean empty) {
+                    super.updateItem(item, empty);
+                    setGraphic(empty ? null : purchaseBtn);
+                }
+            };
+            return cell;
+        });
+        
+        tableView.getColumns().addAll(itemNameCol, itemCategoryCol, itemSizeCol, itemPriceCol, removeItemCol, purchaseItemCol);
         refreshTableData();
         
         Button refreshBtn = new Button("Refresh");
@@ -117,6 +143,29 @@ public class BuyerViewWishListPage {
         }
     }
     
+    private void handlePurchaseFromWishlist(Item item) {
+		Optional<ButtonType> result = showConfirmation("Confirm Purchase", "Are you sure you want to purchase this item?");
+		
+		if (result.isPresent()) {
+			if (result.get() == ButtonType.YES) {
+				boolean removeWishlist = wishlistController.removeFromWishlist(buyer.getId(), item.getItemId());
+				
+				if (removeWishlist) {
+					boolean response = transactionController.purchaseItem(buyer.getId(), item.getItemId());
+					
+					if (response == true) {
+						refreshTableData();
+						showAlert("Success", "Item purchased successfully and moved to purchase history.", Alert.AlertType.INFORMATION);
+					} else {
+						showAlert("Error", "An error occurred while purchasing the item. Please try again.", Alert.AlertType.ERROR);
+					}
+				} else {
+					showAlert("Error", "An error occurred while purchasing the item. Please try again.", Alert.AlertType.ERROR);
+				}
+			}
+		}
+    }
+    
     private void refreshTableData() {
         tableView.getItems().clear();
         tableView.getItems().addAll(wishlistController.getWishlistItems(buyer.getId()));
@@ -129,6 +178,12 @@ public class BuyerViewWishListPage {
         alert.setContentText(content);
         alert.showAndWait();
     }
+    
+    private Optional<ButtonType> showConfirmation(String title, String message) {
+		Alert alert = new Alert(Alert.AlertType.CONFIRMATION, message, ButtonType.YES, ButtonType.NO);
+		alert.setTitle(title);
+		return alert.showAndWait();
+	}
 
 	public Scene getScene() {
 		return this.scene;
