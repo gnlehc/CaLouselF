@@ -44,7 +44,7 @@ public class DatabaseConnection {
 	public void createItemsTable() {
 		String query = "CREATE TABLE IF NOT EXISTS items (" + "item_id INT AUTO_INCREMENT PRIMARY KEY, "
 				+ "name VARCHAR(255) NOT NULL, " + "category VARCHAR(255) NOT NULL, " + "size VARCHAR(50) NOT NULL, "
-				+ "price DOUBLE NOT NULL, " + "status ENUM('Pending', 'Approved', 'Declined') DEFAULT 'Pending',"
+				+ "price DOUBLE NOT NULL, " + "status ENUM('Pending', 'Approved', 'Declined') DEFAULT 'Pending', "
 				+ "sellerId int NOT NULL)";
 		try {
 			exec(query);
@@ -89,6 +89,29 @@ public class DatabaseConnection {
 			e.printStackTrace();
 		}
 	}
+	
+	public void createOfferTable() {
+		String query = "CREATE TABLE IF NOT EXISTS offers (" + "offer_id INT AUTO_INCREMENT PRIMARY KEY, "
+				+ "offer_price DOUBLE NOT NULL, " + "offer_status ENUM('Pending', 'Accepted', 'Declined') DEFAULT 'Pending', " + "user_id INT NOT NULL, " + "item_id INT NOT NULL, "
+				+ "FOREIGN KEY (user_id) REFERENCES users(user_id) ON UPDATE CASCADE ON DELETE CASCADE, "
+				+ "FOREIGN KEY (item_id) REFERENCES items(item_id) ON UPDATE CASCADE ON DELETE CASCADE)";
+		try {
+			exec(query);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void createOfferDeclineLogTable() {
+		String query = "CREATE TABLE IF NOT EXISTS offer_decline_logs (\n"
+				+ "		    log_id INT AUTO_INCREMENT PRIMARY KEY,\n" + "		    offer_id INT NOT NULL,\n"
+				+ "		    reason TEXT NOT NULL)";
+		try {
+			exec(query);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
 	public void migrateTables() {
 		createUsersTable();
@@ -96,6 +119,8 @@ public class DatabaseConnection {
 		createWishlistTable();
 		createItemDeclineLogTable();
 		createTransactionTable();
+		createOfferTable();
+		createOfferDeclineLogTable();
 	}
 
 }

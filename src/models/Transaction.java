@@ -63,7 +63,7 @@ public class Transaction {
 	}
 	
 	public static ObservableList<Transaction> viewHistory(int userId) {
-ObservableList<Transaction> transactions = FXCollections.observableArrayList();
+		ObservableList<Transaction> transactions = FXCollections.observableArrayList();
 		
 		String query = "SELECT * FROM transactions AS T JOIN items AS I ON T.item_id = I.item_id WHERE T.user_id = ?";
 		
