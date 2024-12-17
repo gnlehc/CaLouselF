@@ -1,49 +1,20 @@
 package controllers;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-import database.DatabaseConnection;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.scene.control.Alert;
 import models.Item;
 
 public class ItemController {
 	private List<Item> items;
-	
-	private DatabaseConnection DB() {
-		return new DatabaseConnection();
-	}
 
 	public ItemController() {
 		items = new ArrayList<>();
 	}
 
 	public boolean uploadItem(Item item) {
-		String query = "INSERT INTO items (name, category, size, price, status, sellerId) VALUES (?, ?, ?, ?, ?, ?)";
-
-		try (PreparedStatement preparedStatement = DB().connection.prepareStatement(query)) {
-			preparedStatement.setString(1, item.getName());
-			preparedStatement.setString(2, item.getCategory());
-			preparedStatement.setString(3, item.getSize());
-			preparedStatement.setDouble(4, item.getPrice());
-			preparedStatement.setString(5, item.getStatus());
-			preparedStatement.setInt(6, item.getSellerId());
-
-			int rowsAffected = preparedStatement.executeUpdate();
-
-			return rowsAffected > 0;
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-			return false;
-		}
+		return Item.uploadItem(item);
 	}
 
 	public boolean validateItem(Item item) {
@@ -67,60 +38,15 @@ public class ItemController {
 			return false;
 		}
 
-		String query = "UPDATE items SET name = ?, category = ?, size = ?, price = ?, status = ? WHERE item_id = ?";
-		try (PreparedStatement stmt = DB().connection.prepareStatement(query)) {
-			stmt.setString(1, item.getName());
-			stmt.setString(2, item.getCategory());
-			stmt.setString(3, item.getSize());
-			stmt.setDouble(4, item.getPrice());
-			stmt.setString(5, item.getStatus());
-			stmt.setInt(6, item.getItemId());
-
-			int rowsUpdated = stmt.executeUpdate();
-			return rowsUpdated > 0;
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-
-		return false;
+		return Item.updateItem(item);
 	}
 
 	public ObservableList<Item> getItemsBySellerId(int sellerId) {
-		ObservableList<Item> items = FXCollections.observableArrayList();
-		String query = "SELECT * FROM items WHERE sellerId = ?";
-
-		try (Connection conn = DB().connection; PreparedStatement stmt = conn.prepareStatement(query)) {
-			stmt.setInt(1, sellerId);
-			ResultSet rs = stmt.executeQuery();
-
-			while (rs.next()) {
-				Item item = new Item(rs.getString("name"), rs.getString("category"), rs.getString("size"),
-						rs.getDouble("price"), rs.getString("status"), rs.getInt("sellerId"));
-				item.setItemId(rs.getInt("item_id"));
-				items.add(item);
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return items;
+		return Item.getItemsBySellerId(sellerId);
 	}
 
 	public ObservableList<Item> getApprovedItems() {
-		ObservableList<Item> approvedItems = FXCollections.observableArrayList();
-		String query = "SELECT * FROM items WHERE status = 'Approved'";
-
-		try (Statement stmt = DB().connection.createStatement(); ResultSet rs = stmt.executeQuery(query)) {
-			while (rs.next()) {
-				Item item = new Item(rs.getString("name"), rs.getString("category"), rs.getString("size"),
-						rs.getDouble("price"), rs.getString("status"), rs.getInt("sellerId"));
-				item.setItemId(rs.getInt("item_id"));
-				approvedItems.add(item);
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-
-		return approvedItems;
+		return Item.getApprovedItems();
 	}
 
 	public void insertDefaultItems() {
@@ -136,90 +62,18 @@ public class ItemController {
 	}
 
 	public ObservableList<Item> getPendingItems() {
-		ObservableList<Item> items = FXCollections.observableArrayList();
-		String query = "SELECT * FROM items WHERE status = 'Pending'";
-
-		try (Statement stmt = DB().connection.createStatement(); ResultSet rs = stmt.executeQuery(query)) {
-			while (rs.next()) {
-				Item item = new Item(rs.getString("name"), rs.getString("category"), rs.getString("size"),
-						rs.getDouble("price"), rs.getString("status"), rs.getInt("sellerId"));
-				item.setItemId(rs.getInt("item_id"));
-				items.add(item);
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-
-		return items;
+		return Item.getPendingItems();
 	}
 
 	public boolean approveItem(int itemId) {
-		String query = "UPDATE items SET status = 'approved' WHERE item_id = ?";
-		try (PreparedStatement stmt = DB().connection.prepareStatement(query)) {
-			stmt.setInt(1, itemId);
-			int rowsUpdated = stmt.executeUpdate();
-			return rowsUpdated > 0;
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return false;
-	}
-
-	public boolean declineItem(int itemId, String reason) {
-		if (!doesItemExist(itemId)) {
-			showAlert("Error", "Item not found.");
-			return false;
-		}
-
-		logDeclineReason(itemId, reason);
-
-		return deleteItem(itemId);
-	}
-
-	private boolean doesItemExist(int itemId) {
-		String query = "SELECT COUNT(*) FROM items WHERE item_id = ?";
-		try (PreparedStatement stmt = DB().connection.prepareStatement(query)) {
-			stmt.setInt(1, itemId);
-			try (ResultSet rs = stmt.executeQuery()) {
-				if (rs.next()) {
-					return rs.getInt(1) > 0;
-				}
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return false;
-	}
-
-	private void logDeclineReason(int itemId, String reason) {
-		String query = "INSERT INTO item_decline_logs (item_id, reason) VALUES (?, ?)";
-		try (PreparedStatement stmt = DB().connection.prepareStatement(query)) {
-			stmt.setInt(1, itemId);
-			stmt.setString(2, reason);
-			stmt.executeUpdate();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		return Item.approveItem(itemId);
 	}
 	
 	public boolean deleteItem(int itemId) {
-		String query = "DELETE FROM items WHERE item_id = ?";
-		try (PreparedStatement stmt = DB().connection.prepareStatement(query)) {
-			stmt.setInt(1, itemId);
-			int rowsDeleted = stmt.executeUpdate();
-			return rowsDeleted > 0;
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return false;
+		return Item.deleteItem(itemId);
 	}
 
-	private void showAlert(String title, String message) {
-		Alert alert = new Alert(Alert.AlertType.INFORMATION);
-		alert.setTitle(title);
-		alert.setHeaderText(null);
-		alert.setContentText(message);
-		alert.showAndWait();
+	public boolean declineItem(int itemId, String reason) {
+		return Item.logDeclineReason(itemId, reason) && deleteItem(itemId);
 	}
-
 }

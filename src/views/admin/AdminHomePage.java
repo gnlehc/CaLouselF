@@ -123,8 +123,8 @@ public class AdminHomePage {
             } else {
                 boolean success = itemController.declineItem(selectedItem.getItemId(), reason);
                 if (success) {
+                	pendingItemsListView.getItems().remove(selectedItem);
                     showAlert("Success", "Item declined successfully.");
-                    pendingItemsListView.getItems().remove(selectedItem);
                 } else {
                     showAlert("Error", "Failed to decline item.");
                 }
