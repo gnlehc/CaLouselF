@@ -87,7 +87,7 @@ public class ItemController {
 		ObservableList<Item> items = FXCollections.observableArrayList();
 		String query = "SELECT * FROM items WHERE sellerId = ?";
 
-		try (Connection conn = db.connection; PreparedStatement stmt = conn.prepareStatement(query)) {
+		try (Connection conn = new DatabaseConnection().connection; PreparedStatement stmt = conn.prepareStatement(query)) {
 			stmt.setInt(1, sellerId);
 			ResultSet rs = stmt.executeQuery();
 
@@ -171,15 +171,7 @@ public class ItemController {
 
 		logDeclineReason(itemId, reason);
 
-		String query = "DELETE FROM items WHERE item_id = ?";
-		try (PreparedStatement stmt = db.connection.prepareStatement(query)) {
-			stmt.setInt(1, itemId);
-			int rowsDeleted = stmt.executeUpdate();
-			return rowsDeleted > 0;
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return false;
+		return deleteItem(itemId);
 	}
 
 	private boolean doesItemExist(int itemId) {
@@ -208,8 +200,16 @@ public class ItemController {
 		}
 	}
 	
-	public void deleteItem(int itemId) {
-		
+	public boolean deleteItem(int itemId) {
+		String query = "DELETE FROM items WHERE item_id = ?";
+		try (PreparedStatement stmt = new DatabaseConnection().connection.prepareStatement(query)) {
+			stmt.setInt(1, itemId);
+			int rowsDeleted = stmt.executeUpdate();
+			return rowsDeleted > 0;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return false;
 	}
 
 	private void showAlert(String title, String message) {
