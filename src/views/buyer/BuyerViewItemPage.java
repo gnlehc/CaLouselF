@@ -67,12 +67,17 @@ public class BuyerViewItemPage {
 	private void handleAddToWishlist() {
 		Item selectedItem = itemListView.getSelectionModel().getSelectedItem();
 		if (selectedItem != null) {
-			boolean response = wishListController.addToWishlist(selectedItem, loggedUser.getId());
-		     if (response) {
-		    	 showAlert("Wishlist Updated", "Item added to your wishlist.");
-		     } else {
-		    	 showAlert("Error", "Failed to add the item to your wishlist. Please try again.");
-		     }
+			boolean isItemOnWishlist = wishListController.isItemInWishlist(loggedUser.getId(), selectedItem.getItemId());
+			if (isItemOnWishlist) {
+				showAlert("Item Already on Wishlist", "This item is already on your wishlist.");
+			} else {
+				boolean response = wishListController.addToWishlist(selectedItem, loggedUser.getId());
+			     if (response) {
+			    	 showAlert("Wishlist Updated", "Item added to your wishlist.");
+			     } else {
+			    	 showAlert("Error", "Failed to add the item to your wishlist. Please try again.");
+			     }
+			}
 		 } else {
 			 showAlert("No Item Selected", "Please select an item to add to your wishlist.");
 		 }

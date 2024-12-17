@@ -40,12 +40,12 @@ public class WishListController {
 		}
 	}
 
-	public boolean isItemInWishlist(String userId, String itemId) {
+	public boolean isItemInWishlist(int userId, int itemId) {
 		String query = "SELECT * FROM wishlists WHERE user_id = ? AND item_id = ?";
 		try {
 			PreparedStatement ps = DB().connection.prepareStatement(query);
-			ps.setString(1, userId);
-			ps.setString(2, itemId);
+			ps.setInt(1, userId);
+			ps.setInt(2, itemId);
 			ResultSet rs = ps.executeQuery();
 			return rs.next();
 		} catch (SQLException e) {
