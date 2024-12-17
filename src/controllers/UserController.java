@@ -13,11 +13,14 @@ import javafx.collections.ObservableList;
 import models.User;
 
 public class UserController {
-	private DatabaseConnection db;
 	private ArrayList<User> users = new ArrayList<User>();
+	
+	private DatabaseConnection DB() {
+		return new DatabaseConnection();
+	}
 
 	public UserController() {
-		this.db = new DatabaseConnection();
+
 	}
 
 	public Boolean Register(User user) {
@@ -28,7 +31,7 @@ public class UserController {
 		String query = "INSERT INTO users(username, password, phone_number, address, role)" + "VALUES (?, ?, ?, ?, ?)";
 
 		try {
-			PreparedStatement stmt = db.connection.prepareStatement(query);
+			PreparedStatement stmt = DB().connection.prepareStatement(query);
 			stmt.setString(1, user.getUsername());
 			stmt.setString(2, user.getPassword());
 			stmt.setString(3, user.getPhoneNumber());
@@ -36,7 +39,6 @@ public class UserController {
 			stmt.setString(5, user.getRole());
 			int rowsAffected = stmt.executeUpdate();
 			users.add(user);
-			System.out.println(rowsAffected);
 			return rowsAffected > 0;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -55,7 +57,7 @@ public class UserController {
 	public User Login(String username, String password) {
 		String query = "SELECT * FROM users WHERE username = ? AND password = ?";
 
-		try (Connection conn = db.connection; PreparedStatement pstmt = conn.prepareStatement(query)) {
+		try (Connection conn = DB().connection; PreparedStatement pstmt = conn.prepareStatement(query)) {
 
 			pstmt.setString(1, username);
 			pstmt.setString(2, password);
@@ -68,7 +70,6 @@ public class UserController {
 				return user;
 			}
 		} catch (SQLException e) {
-			System.err.println("Error authenticating user: " + e.getMessage());
 			e.printStackTrace();
 		}
 		return null;
@@ -77,7 +78,7 @@ public class UserController {
 	public Boolean checkUserExists(User user) {
 		String query = "SELECT COUNT(*) FROM users WHERE username=?";
 		try {
-			PreparedStatement stmt = db.connection.prepareStatement(query);
+			PreparedStatement stmt = DB().connection.prepareStatement(query);
 			stmt.setString(1, user.getUsername());
 			ResultSet rs = stmt.executeQuery();
 			if (rs.next()) {
@@ -93,7 +94,7 @@ public class UserController {
 
 	public boolean isUsernameUnique(String username) {
 		String query = "SELECT COUNT(*) FROM users WHERE username = ?";
-		try (PreparedStatement stmt = db.connection.prepareStatement(query)) {
+		try (PreparedStatement stmt = DB().connection.prepareStatement(query)) {
 			stmt.setString(1, username);
 			ResultSet rs = stmt.executeQuery();
 			if (rs.next() && rs.getInt(1) > 0) {
@@ -109,7 +110,7 @@ public class UserController {
 		ObservableList<User> users = FXCollections.observableArrayList();
 		String query = "SELECT * FROM users";
 
-		try (Statement stmt = db.connection.createStatement(); ResultSet rs = stmt.executeQuery(query)) {
+		try (Statement stmt = DB().connection.createStatement(); ResultSet rs = stmt.executeQuery(query)) {
 			while (rs.next()) {
 				User user = new User(rs.getString("username"), rs.getString("password"), rs.getString("phone_number"),
 						rs.getString("address"), rs.getString("role"));

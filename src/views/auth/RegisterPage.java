@@ -129,7 +129,6 @@ public class RegisterPage {
 		User newUser = new User(username, password, phone, address, role);
 		boolean isRegistered = userController.Register(newUser);
 		if (isRegistered) {
-			System.out.println("Registration Successful!");
 			showAlert("Success", "Registration successful! Redirecting to login page.");
 			goToLoginPage();
 		} else {

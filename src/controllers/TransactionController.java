@@ -12,10 +12,12 @@ import models.Item;
 import models.Transaction;
 
 public class TransactionController {
-	private DatabaseConnection db;
+	private DatabaseConnection DB() {
+		return new DatabaseConnection();
+	}
 	
 	public TransactionController() {
-		this.db = new DatabaseConnection();
+
 	}
 
 	public boolean purchaseItem(int userId, int itemId) {
@@ -27,7 +29,7 @@ public class TransactionController {
 		
 		String query = "SELECT * FROM transactions AS T JOIN items AS I ON T.item_id = I.item_id WHERE T.user_id = ?";
 		
-		try (Connection conn = db.connection; PreparedStatement stmt = conn.prepareStatement(query)) {
+		try (Connection conn = DB().connection; PreparedStatement stmt = conn.prepareStatement(query)) {
 			stmt.setInt(1, userId);
 			ResultSet rs = stmt.executeQuery();
 			
@@ -51,7 +53,7 @@ public class TransactionController {
 	
 	public boolean createTransaction(Transaction newTransaction) {
 		String query = "INSERT INTO transactions (user_id, item_id) VALUES (?, ?)";
-		try (PreparedStatement preparedStatement = db.connection.prepareStatement(query)) {
+		try (PreparedStatement preparedStatement = DB().connection.prepareStatement(query)) {
 			preparedStatement.setInt(1, newTransaction.getUserId());
 			preparedStatement.setInt(2, newTransaction.getItemId());
 			int rowsAffected = preparedStatement.executeUpdate();

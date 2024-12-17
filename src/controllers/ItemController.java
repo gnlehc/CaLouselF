@@ -15,18 +15,20 @@ import javafx.scene.control.Alert;
 import models.Item;
 
 public class ItemController {
-	private DatabaseConnection db;
 	private List<Item> items;
+	
+	private DatabaseConnection DB() {
+		return new DatabaseConnection();
+	}
 
 	public ItemController() {
-		this.db = new DatabaseConnection();
 		items = new ArrayList<>();
 	}
 
 	public boolean uploadItem(Item item) {
 		String query = "INSERT INTO items (name, category, size, price, status, sellerId) VALUES (?, ?, ?, ?, ?, ?)";
 
-		try (PreparedStatement preparedStatement = db.connection.prepareStatement(query)) {
+		try (PreparedStatement preparedStatement = DB().connection.prepareStatement(query)) {
 			preparedStatement.setString(1, item.getName());
 			preparedStatement.setString(2, item.getCategory());
 			preparedStatement.setString(3, item.getSize());
@@ -66,7 +68,7 @@ public class ItemController {
 		}
 
 		String query = "UPDATE items SET name = ?, category = ?, size = ?, price = ?, status = ? WHERE item_id = ?";
-		try (PreparedStatement stmt = db.connection.prepareStatement(query)) {
+		try (PreparedStatement stmt = DB().connection.prepareStatement(query)) {
 			stmt.setString(1, item.getName());
 			stmt.setString(2, item.getCategory());
 			stmt.setString(3, item.getSize());
@@ -87,7 +89,7 @@ public class ItemController {
 		ObservableList<Item> items = FXCollections.observableArrayList();
 		String query = "SELECT * FROM items WHERE sellerId = ?";
 
-		try (Connection conn = new DatabaseConnection().connection; PreparedStatement stmt = conn.prepareStatement(query)) {
+		try (Connection conn = DB().connection; PreparedStatement stmt = conn.prepareStatement(query)) {
 			stmt.setInt(1, sellerId);
 			ResultSet rs = stmt.executeQuery();
 
@@ -107,7 +109,7 @@ public class ItemController {
 		ObservableList<Item> approvedItems = FXCollections.observableArrayList();
 		String query = "SELECT * FROM items WHERE status = 'Approved'";
 
-		try (Statement stmt = db.connection.createStatement(); ResultSet rs = stmt.executeQuery(query)) {
+		try (Statement stmt = DB().connection.createStatement(); ResultSet rs = stmt.executeQuery(query)) {
 			while (rs.next()) {
 				Item item = new Item(rs.getString("name"), rs.getString("category"), rs.getString("size"),
 						rs.getDouble("price"), rs.getString("status"), rs.getInt("sellerId"));
@@ -137,7 +139,7 @@ public class ItemController {
 		ObservableList<Item> items = FXCollections.observableArrayList();
 		String query = "SELECT * FROM items WHERE status = 'Pending'";
 
-		try (Statement stmt = db.connection.createStatement(); ResultSet rs = stmt.executeQuery(query)) {
+		try (Statement stmt = DB().connection.createStatement(); ResultSet rs = stmt.executeQuery(query)) {
 			while (rs.next()) {
 				Item item = new Item(rs.getString("name"), rs.getString("category"), rs.getString("size"),
 						rs.getDouble("price"), rs.getString("status"), rs.getInt("sellerId"));
@@ -153,7 +155,7 @@ public class ItemController {
 
 	public boolean approveItem(int itemId) {
 		String query = "UPDATE items SET status = 'approved' WHERE item_id = ?";
-		try (PreparedStatement stmt = db.connection.prepareStatement(query)) {
+		try (PreparedStatement stmt = DB().connection.prepareStatement(query)) {
 			stmt.setInt(1, itemId);
 			int rowsUpdated = stmt.executeUpdate();
 			return rowsUpdated > 0;
@@ -176,7 +178,7 @@ public class ItemController {
 
 	private boolean doesItemExist(int itemId) {
 		String query = "SELECT COUNT(*) FROM items WHERE item_id = ?";
-		try (PreparedStatement stmt = db.connection.prepareStatement(query)) {
+		try (PreparedStatement stmt = DB().connection.prepareStatement(query)) {
 			stmt.setInt(1, itemId);
 			try (ResultSet rs = stmt.executeQuery()) {
 				if (rs.next()) {
@@ -191,7 +193,7 @@ public class ItemController {
 
 	private void logDeclineReason(int itemId, String reason) {
 		String query = "INSERT INTO item_decline_logs (item_id, reason) VALUES (?, ?)";
-		try (PreparedStatement stmt = db.connection.prepareStatement(query)) {
+		try (PreparedStatement stmt = DB().connection.prepareStatement(query)) {
 			stmt.setInt(1, itemId);
 			stmt.setString(2, reason);
 			stmt.executeUpdate();
@@ -202,7 +204,7 @@ public class ItemController {
 	
 	public boolean deleteItem(int itemId) {
 		String query = "DELETE FROM items WHERE item_id = ?";
-		try (PreparedStatement stmt = new DatabaseConnection().connection.prepareStatement(query)) {
+		try (PreparedStatement stmt = DB().connection.prepareStatement(query)) {
 			stmt.setInt(1, itemId);
 			int rowsDeleted = stmt.executeUpdate();
 			return rowsDeleted > 0;

@@ -9,21 +9,21 @@ import database.DatabaseConnection;
 import models.Item;
 
 public class WishListController {
-
-	private DatabaseConnection db;
+	private DatabaseConnection DB() {
+		return new DatabaseConnection();
+	}
 
 	public WishListController() {
-		this.db = new DatabaseConnection();
+		
 	}
 
 	public boolean addToWishlist(Item item, int userId) {
 		if (item == null) {
-			System.err.println("Selected item is null.");
 			return false;
 		}
 
 		String query = "INSERT INTO wishlists (user_id, item_id) VALUES (?, ?)";
-		try (PreparedStatement stmt = db.connection.prepareStatement(query)) {
+		try (PreparedStatement stmt = DB().connection.prepareStatement(query)) {
 			stmt.setInt(1, userId);
 			stmt.setInt(2, item.getItemId());
 
@@ -43,7 +43,7 @@ public class WishListController {
 	public boolean isItemInWishlist(String userId, String itemId) {
 		String query = "SELECT * FROM wishlists WHERE user_id = ? AND item_id = ?";
 		try {
-			PreparedStatement ps = db.connection.prepareStatement(query);
+			PreparedStatement ps = DB().connection.prepareStatement(query);
 			ps.setString(1, userId);
 			ps.setString(2, itemId);
 			ResultSet rs = ps.executeQuery();
@@ -59,7 +59,7 @@ public class WishListController {
 		String query = "SELECT i.* FROM items i JOIN wishlists w ON i.item_id = w.item_id WHERE w.user_id = ?";
 
 		try {
-			PreparedStatement ps = db.connection.prepareStatement(query);
+			PreparedStatement ps = DB().connection.prepareStatement(query);
 			ps.setLong(1, userId);
 			ResultSet rs = ps.executeQuery();
 
@@ -78,7 +78,7 @@ public class WishListController {
 	public boolean removeFromWishlist(int userId, int itemId) {
 	    String query = "DELETE FROM wishlists WHERE user_id = ? AND item_id = ?";
 	    try {
-	        PreparedStatement ps = db.connection.prepareStatement(query);
+	        PreparedStatement ps = DB().connection.prepareStatement(query);
 	        ps.setInt(1, userId);
 	        ps.setInt(2,itemId);
 	        int result = ps.executeUpdate();
