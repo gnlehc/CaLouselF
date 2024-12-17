@@ -61,7 +61,8 @@ public class BuyerViewWishListPage {
 		BuyerHomePage previousPage = new BuyerHomePage(stage, buyer);
 		stage.setScene(previousPage.getScene());
 	}
-    private VBox createTableView() {
+    @SuppressWarnings("unchecked")
+	private VBox createTableView() {
         VBox vbox = new VBox(10);
         vbox.setPadding(new Insets(10));
         

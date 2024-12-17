@@ -50,6 +50,7 @@ public class BuyerViewPurchaseHistoryPage {
         stage.show();
 	}
     
+	@SuppressWarnings("unchecked")
 	private VBox createTableView() {
 		VBox vbox = new VBox(10);
         vbox.setPadding(new Insets(10));

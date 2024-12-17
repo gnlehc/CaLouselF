@@ -32,6 +32,7 @@ public class SellerViewMyItemPage {
 		initializeUI(seller.getId());
 	}
 
+	@SuppressWarnings("unchecked")
 	private void initializeUI(int sellerId) {
 		tableView = new TableView<>();
 
