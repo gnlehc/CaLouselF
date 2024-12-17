@@ -3,16 +3,12 @@ package database;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 
 public class DatabaseConnection {
 	public Connection connection;
 	public Statement statement;
-	public ResultSet resultSet;
-	public ResultSetMetaData resultSetMetaData;
 	public PreparedStatement preparedStatement;
 
 	public DatabaseConnection() {
@@ -23,16 +19,6 @@ public class DatabaseConnection {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	}
-
-	public ResultSet execQuery(String query) {
-		try {
-			resultSet = statement.executeQuery(query);
-			resultSetMetaData = resultSet.getMetaData();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return resultSet;
 	}
 
 	public void exec(String query) {
