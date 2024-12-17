@@ -72,9 +72,8 @@ public class DatabaseConnection {
 		        + "wishlist_id INT AUTO_INCREMENT PRIMARY KEY, "
 		        + "user_id INT NOT NULL, "
 		        + "item_id INT NOT NULL, "
-		        + "UNIQUE (user_id, item_id), "
-		        + "FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE, "
-		        + "FOREIGN KEY (item_id) REFERENCES items(item_id) ON DELETE CASCADE)";
+		        + "FOREIGN KEY (user_id) REFERENCES users(user_id) ON UPDATE CASCADE ON DELETE CASCADE, "
+		        + "FOREIGN KEY (item_id) REFERENCES items(item_id) ON UPDATE CASCADE ON DELETE CASCADE)";
 		try {
 			exec(query);
 		} catch (Exception e) {
@@ -96,8 +95,8 @@ public class DatabaseConnection {
 	public void createTransactionTable() {
 		String query = "CREATE TABLE IF NOT EXISTS transactions (" + "transaction_id INT AUTO_INCREMENT PRIMARY KEY, "
 				+ "user_id INT NOT NULL, " + "item_id INT NOT NULL, "
-				+ "FOREIGN KEY (user_id) REFERENCES users(user_id), "
-				+ "FOREIGN KEY (item_id) REFERENCES items(item_id))";
+				+ "FOREIGN KEY (user_id) REFERENCES users(user_id) ON UPDATE CASCADE ON DELETE CASCADE, "
+				+ "FOREIGN KEY (item_id) REFERENCES items(item_id) ON UPDATE CASCADE ON DELETE CASCADE)";
 		try {
 			exec(query);
 		} catch (Exception e) {
