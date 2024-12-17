@@ -1,16 +1,11 @@
 package controllers;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javafx.collections.ObservableList;
 import models.Item;
 
 public class ItemController {
-	private List<Item> items;
-
 	public ItemController() {
-		items = new ArrayList<>();
+
 	}
 
 	public boolean uploadItem(Item item) {
@@ -50,15 +45,11 @@ public class ItemController {
 	}
 
 	public void insertDefaultItems() {
-		items.add(new Item("Jeans", "Bottom", "Medium", 50.0, "Approved", 1));
-		items.add(new Item("Shirt", "Top", "Large", 100.0, "Approved", 1));
-		items.add(new Item("T-Shirt", "Top", "Small", 20.0, "Pending", 1));
-		items.add(new Item("Airism", "Top", "Medium", 150.0, "Approved", 2));
-		items.add(new Item("UV Jacket", "Outer", "Large", 75.0, "Pending", 2));
-
-		for (Item i : items) {
-			uploadItem(i);
-		}
+		uploadItem(new Item("Jeans", "Bottom", "Medium", 50.0, "Approved", 1));
+		uploadItem(new Item("Shirt", "Top", "Large", 100.0, "Approved", 1));
+		uploadItem(new Item("T-Shirt", "Top", "Small", 20.0, "Pending", 1));
+		uploadItem(new Item("Airism", "Top", "Medium", 150.0, "Approved", 2));
+		uploadItem(new Item("UV Jacket", "Outer", "Large", 75.0, "Pending", 2));
 	}
 
 	public ObservableList<Item> getPendingItems() {
