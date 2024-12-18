@@ -3,6 +3,7 @@ package views.seller;
 import java.util.Optional;
 
 import controllers.ItemController;
+import controllers.OfferController;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -10,6 +11,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -23,12 +25,14 @@ public class SellerViewMyItemPage {
 	private Scene scene;
 	private TableView<Item> tableView;
 	private ItemController itemController;
+	private OfferController offerController;
 	private User seller;
 
 	public SellerViewMyItemPage(Stage stage, User seller) {
 		this.stage = stage;
 		this.seller = seller;
 		itemController = new ItemController();
+		offerController = new OfferController();
 		initializeUI(seller.getId());
 	}
 
@@ -51,8 +55,28 @@ public class SellerViewMyItemPage {
 
 		TableColumn<Item, String> itemStatusCol = new TableColumn<>("Item Status");
 		itemStatusCol.setCellValueFactory(new PropertyValueFactory<>("status"));
+		
+		TableColumn<Item, Void> OfferCol = new TableColumn<>("Offer");
+		OfferCol.setCellFactory(col -> {
+            TableCell<Item, Void> cell = new TableCell<>() {
+                private final Button viewOfferBtn = new Button("View Offer");
+                {
+                	viewOfferBtn.setOnAction(e -> {
+                        Item item = getTableView().getItems().get(getIndex());
+                        handleViewOffer(item.getItemId());
+                    });
+                }
+                
+                @Override
+                protected void updateItem(Void item, boolean empty) {
+                    super.updateItem(item, empty);
+                    setGraphic(empty ? null : viewOfferBtn);
+                }
+            };
+            return cell;
+        });
 
-		tableView.getColumns().addAll(itemNameCol, itemCategoryCol, itemSizeCol, itemPriceCol, itemStatusCol);
+		tableView.getColumns().addAll(itemNameCol, itemCategoryCol, itemSizeCol, itemPriceCol, itemStatusCol, OfferCol);
 
 		refreshTableData();
 
@@ -106,6 +130,11 @@ public class SellerViewMyItemPage {
 		} else {
 			showAlert("No Item Selected", "Please select an item to delete.");
 		}
+	}
+	
+	private void handleViewOffer(int itemId) {
+		SellerViewOfferPage sellerViewOfferPage = new SellerViewOfferPage(stage, seller, offerController.viewOfferItemForSeller(itemId));
+		stage.setScene(sellerViewOfferPage.getScene());
 	}
 	
 	private void showAlert(String title, String message) {

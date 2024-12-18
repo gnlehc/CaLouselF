@@ -126,8 +126,28 @@ public class Offer {
 		return true;
 	}
 	
-	public static ObservableList<Offer> viewOfferItemForSeller(int userId, int itemId) {
+	public static ObservableList<Offer> viewOfferItemForSeller(int itemId) {
 		ObservableList<Offer> offers = FXCollections.observableArrayList();
+		
+		String query = "SELECT * FROM offers AS O JOIN items AS I ON O.item_id = I.item_id WHERE O.item_id = ?";
+		
+		try (PreparedStatement preparedStatement = DB().connection.prepareStatement(query)) {
+			preparedStatement.setInt(1, itemId);
+			ResultSet rs = preparedStatement.executeQuery();
+			
+			while (rs.next()) {
+				Item item = new Item(rs.getString("name"), rs.getString("category"), rs.getString("size"),
+						rs.getDouble("price"), rs.getString("status"), rs.getInt("sellerId"));
+				item.setItemId(rs.getInt("item_id"));
+				
+				Offer offer = new Offer(rs.getInt("offer_id"), rs.getDouble("offer_price"), rs.getString("offer_status"), rs.getInt("user_id"), rs.getInt("item_id"), item);
+				
+				offers.add(offer);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
 		return offers;
 	}
 	

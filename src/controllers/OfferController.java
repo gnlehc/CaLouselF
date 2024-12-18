@@ -1,5 +1,6 @@
 package controllers;
 
+import javafx.collections.ObservableList;
 import models.Item;
 import models.Offer;
 import models.Validation;
@@ -30,5 +31,9 @@ public class OfferController {
 		
 		Validation response = Offer.createOffer(offerPrice, userId, selectedItem.getItemId());
 		return new Validation(response.getStatus(), response.getTitle(), response.getMessage());
+	}
+	
+	public ObservableList<Offer> viewOfferItemForSeller(int itemId) {
+		return Offer.viewOfferItemForSeller(itemId);
 	}
 }
