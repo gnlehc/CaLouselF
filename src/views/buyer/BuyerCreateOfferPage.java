@@ -86,7 +86,7 @@ public class BuyerCreateOfferPage {
 	
 	private void handleCreateOffer() {
 		String offerPriceText = offerPriceField.getText();
-		Validation validate = offerController.createOffer(offerPriceText, loggedUser.getId(), selectedItem.getItemId());
+		Validation validate = offerController.createOffer(offerPriceText, loggedUser.getId(), selectedItem);
 		validate.showAlert();
 		if (validate.getStatus()) {
 			clearFields();
