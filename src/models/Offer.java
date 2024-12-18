@@ -172,9 +172,4 @@ public class Offer {
 		
 		return offers;
 	}
-	
-	public static ObservableList<Offer> viewOfferItemForBuyer(int userId) {
-		ObservableList<Offer> offers = FXCollections.observableArrayList();
-		return offers;
-	}
 }
