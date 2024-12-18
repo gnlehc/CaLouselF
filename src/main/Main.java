@@ -19,7 +19,6 @@ public class Main extends Application {
 	public Main() {
 		db.migrateTables();
 		userController.insertDefaultUsers();
-//		itemController.insertDefaultItems();
 	}
 
 	@Override
