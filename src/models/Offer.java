@@ -117,8 +117,15 @@ public class Offer {
 	}
 	
 	public static boolean acceptOffer(int offerId) {
-		// create purchase item
-		return true;
+		String query = "DELETE FROM offers WHERE offer_id = ?";
+		try (PreparedStatement preparedStatement = DB().connection.prepareStatement(query)) {
+			preparedStatement.setInt(1, offerId);
+			int rowsDeleted = preparedStatement.executeUpdate();
+			return rowsDeleted > 0;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
 	}
 	
 	public static boolean declineOffer(int offerId) {

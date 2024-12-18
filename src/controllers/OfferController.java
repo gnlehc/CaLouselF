@@ -33,6 +33,10 @@ public class OfferController {
 		return new Validation(response.getStatus(), response.getTitle(), response.getMessage());
 	}
 	
+	public boolean acceptOffer(int offerId) {
+		return Offer.acceptOffer(offerId);
+	}
+	
 	public ObservableList<Offer> viewOfferItemForSeller(int itemId) {
 		return Offer.viewOfferItemForSeller(itemId);
 	}

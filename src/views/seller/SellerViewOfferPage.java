@@ -1,11 +1,17 @@
 package views.seller;
 
+import java.util.Optional;
+
+import controllers.OfferController;
+import controllers.TransactionController;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -13,6 +19,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import models.Offer;
+import models.Transaction;
 import models.User;
 
 public class SellerViewOfferPage {
@@ -21,12 +28,16 @@ public class SellerViewOfferPage {
 	private User seller;
 	private TableView<Offer> tableView;
 	private ObservableList<Offer> offers;
+	private OfferController offerController;
+	private TransactionController transactionController;
 	
 	public SellerViewOfferPage(Stage stage, User seller, ObservableList<Offer> offers) {
 		this.stage = stage;
 		this.seller = seller;
 		this.tableView = new TableView<>();
 		this.offers = offers;
+		this.offerController = new OfferController();
+		this.transactionController = new TransactionController();
 		initializeView();
 	}
 	
@@ -88,16 +99,65 @@ public class SellerViewOfferPage {
         tableView.setItems(offers);
         
         Button acceptOfferButton = new Button("Accept Offer");
-		acceptOfferButton.setOnAction(event -> handleBack());
+		acceptOfferButton.setOnAction(event -> handleAcceptOffer());
 		
 		Button declineOfferButton = new Button("Decline Offer");
-		declineOfferButton.setOnAction(event -> handleBack());
+		declineOfferButton.setOnAction(event -> handleDeclineOffer());
         
         Button backButton = new Button("Back");
 		backButton.setOnAction(event -> handleBack());
 		
 		vbox.getChildren().addAll(tableView, acceptOfferButton, declineOfferButton, backButton);
         return vbox;
+	}
+	
+	private void handleAcceptOffer() {
+		Offer selectedOffer = tableView.getSelectionModel().getSelectedItem();
+		
+		if (selectedOffer != null) {
+			Optional<ButtonType> result = showConfirmation("Confirm Accept", "Are you sure you want to accept this offer?");
+			
+			if (result.isPresent()) {
+				if (result.get() == ButtonType.YES) {
+					boolean response =  transactionController.createTransaction(new Transaction(selectedOffer.getUserId(), selectedOffer.getItemId())) && offerController.acceptOffer(selectedOffer.getOfferId());
+					if (response) {
+						showAlert("Success", "Offer accepted successfully & the item has been successfully purchased by the user automatically.");
+					} else {
+						showAlert("Error", "An error occurred while accepting the offer. Please try again.");
+					}
+				}
+			}
+		} else {
+			showAlert("No Item Selected", "Please select an offer to accept.");
+		}
+	}
+	
+	private void handleDeclineOffer() {
+		Offer selectedOffer = tableView.getSelectionModel().getSelectedItem();
+		
+		if (selectedOffer != null) {
+			Optional<ButtonType> result = showConfirmation("Confirm Decline", "Are you sure you want to decline this offer?");
+			
+			if (result.isPresent()) {
+				
+			}
+		} else {
+			showAlert("No Item Selected", "Please select an offer to decline.");
+		}
+	}
+	
+	private void showAlert(String title, String message) {
+		Alert alert = new Alert(Alert.AlertType.INFORMATION);
+		alert.setTitle(title);
+		alert.setHeaderText(null);
+		alert.setContentText(message);
+		alert.showAndWait();
+	}
+	
+	private Optional<ButtonType> showConfirmation(String title, String message) {
+		Alert alert = new Alert(Alert.AlertType.CONFIRMATION, message, ButtonType.YES, ButtonType.NO);
+		alert.setTitle(title);
+		return alert.showAndWait();
 	}
 	
 	private void handleBack() {
