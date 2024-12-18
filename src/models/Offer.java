@@ -116,7 +116,7 @@ public class Offer {
 		}
 	}
 	
-	public static boolean acceptOffer(int offerId) {
+	private static boolean deleteOffer(int offerId) {
 		String query = "DELETE FROM offers WHERE offer_id = ?";
 		try (PreparedStatement preparedStatement = DB().connection.prepareStatement(query)) {
 			preparedStatement.setInt(1, offerId);
@@ -128,9 +128,24 @@ public class Offer {
 		return false;
 	}
 	
-	public static boolean declineOffer(int offerId) {
-		// create offer decline logs
-		return true;
+	public static boolean acceptOffer(int offerId) {
+		return deleteOffer(offerId);
+	}
+	
+	public static boolean declineOffer(int offerId, String reason) {
+		boolean response = deleteOffer(offerId);
+		
+		String query = "INSERT INTO offer_decline_logs (offer_id, reason) VALUES (?, ?)";
+		try(PreparedStatement preparedStatement = DB().connection.prepareStatement(query)){
+			preparedStatement.setInt(1,offerId);
+			preparedStatement.setString(2,reason);
+			int rowsAffected = preparedStatement.executeUpdate();
+			return response && rowsAffected > 0;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return false;
 	}
 	
 	public static ObservableList<Offer> viewOfferItemForSeller(int itemId) {

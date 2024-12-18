@@ -37,6 +37,10 @@ public class OfferController {
 		return Offer.acceptOffer(offerId);
 	}
 	
+	public boolean declineOffer(int offerId, String reason) {
+		return Offer.declineOffer(offerId, reason);
+	}
+	
 	public ObservableList<Offer> viewOfferItemForSeller(int itemId) {
 		return Offer.viewOfferItemForSeller(itemId);
 	}

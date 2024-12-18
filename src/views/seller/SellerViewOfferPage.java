@@ -15,6 +15,7 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -121,6 +122,7 @@ public class SellerViewOfferPage {
 				if (result.get() == ButtonType.YES) {
 					boolean response =  transactionController.createTransaction(new Transaction(selectedOffer.getUserId(), selectedOffer.getItemId())) && offerController.acceptOffer(selectedOffer.getOfferId());
 					if (response) {
+						refreshTableData(selectedOffer);
 						showAlert("Success", "Offer accepted successfully & the item has been successfully purchased by the user automatically.");
 					} else {
 						showAlert("Error", "An error occurred while accepting the offer. Please try again.");
@@ -139,7 +141,26 @@ public class SellerViewOfferPage {
 			Optional<ButtonType> result = showConfirmation("Confirm Decline", "Are you sure you want to decline this offer?");
 			
 			if (result.isPresent()) {
-				
+				if (result.get() == ButtonType.YES) {
+					TextInputDialog dialog = new TextInputDialog();
+			        dialog.setTitle("Decline Offer");
+			        dialog.setHeaderText("Reason for declining the offer:");
+			        dialog.setContentText("Reason:");
+			        
+			        dialog.showAndWait().ifPresent(reason -> {
+			            if (reason.trim().isEmpty()) {
+			                showAlert("Error", "Reason cannot be empty.");
+			            } else {
+			            	boolean response = offerController.declineOffer(selectedOffer.getOfferId(), reason);
+			                if (response) {
+			                	refreshTableData(selectedOffer);
+			                	showAlert("Success", "Offer declined successfully.");
+			                } else {
+			                	showAlert("Error", "An error occurred while declining the offer. Please try again.");
+			                }
+			            }
+			        });
+				}
 			}
 		} else {
 			showAlert("No Item Selected", "Please select an offer to decline.");
@@ -163,6 +184,10 @@ public class SellerViewOfferPage {
 	private void handleBack() {
 		SellerViewMyItemPage previousPage = new SellerViewMyItemPage(stage, seller);
 		stage.setScene(previousPage.getScene());
+	}
+	
+	private void refreshTableData(Offer selectedOffer) {
+		tableView.getItems().remove(selectedOffer);
 	}
 	
 	public Scene getScene() {
