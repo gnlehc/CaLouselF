@@ -53,6 +53,9 @@ public class BuyerViewItemPage {
 		
 		Button addToWishlistButton = new Button("Add to Wishlist");
 	    addToWishlistButton.setOnAction(event -> handleAddToWishlist());
+	    
+	    Button createOfferButton = new Button("Create Offer");
+	    createOfferButton.setOnAction(event -> handleCreateOffer());
 	        
 		Button backButton = new Button("Back");
 		backButton.setOnAction(event -> handleBack());
@@ -60,7 +63,8 @@ public class BuyerViewItemPage {
 		gridPane.add(itemListView, 0, 0);
 		gridPane.add(purchaseButton, 0, 1);
 		gridPane.add(addToWishlistButton, 0, 2);
-		gridPane.add(backButton, 0, 3);
+		gridPane.add(createOfferButton, 0, 3);
+		gridPane.add(backButton, 0, 4);
 		borderPane.setCenter(gridPane);
 	}
 	
@@ -109,6 +113,16 @@ public class BuyerViewItemPage {
 			}
 		} else {
 			showAlert("No Item Selected", "Please select an item to purchase.");
+		}
+	}
+	
+	private void handleCreateOffer() {
+		Item selectedItem = itemListView.getSelectionModel().getSelectedItem();
+		if (selectedItem != null) {
+			BuyerCreateOfferPage buyerCreateOfferPage = new BuyerCreateOfferPage(stage, loggedUser, selectedItem);
+			stage.setScene(buyerCreateOfferPage.getScene());
+		} else {
+			showAlert("No Item Selected", "Please select an item to offer.");
 		}
 	}
 

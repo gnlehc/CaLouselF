@@ -1,5 +1,9 @@
 package models;
 
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 import database.DatabaseConnection;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -79,8 +83,37 @@ public class Offer {
 		return new DatabaseConnection();
 	}
 	
-	public static boolean createOffer(double offerPrice, int userId, int itemId) {
-		return true;
+	public static Validation createOffer(double offerPrice, int userId, int itemId) {
+		String query = "SELECT MAX(offer_price) AS max_offer_price FROM offers WHERE item_id = ?";
+		try (PreparedStatement preparedStatement = DB().connection.prepareStatement(query)) {
+			preparedStatement.setInt(1, itemId);
+			ResultSet rs = preparedStatement.executeQuery();
+			if (rs.next()) {
+				double maxOfferPrice = rs.getDouble("max_offer_price");
+				if (!rs.wasNull() && maxOfferPrice >= offerPrice) {
+					return new Validation(false, "Validation Error", String.format("Offer price must be greater than current maximum offer price: %.2f", maxOfferPrice));
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return new Validation(false, "Error", "An error occurred while creating the offer. Please try again.");
+		}
+		
+		query = "INSERT INTO offers (offer_price, user_id, item_id) VALUES (?, ?, ?)";
+		try (PreparedStatement preparedStatement = DB().connection.prepareStatement(query)) {
+			preparedStatement.setDouble(1, offerPrice);
+			preparedStatement.setInt(2, userId);
+			preparedStatement.setInt(3, itemId);
+			int rowsAffected = preparedStatement.executeUpdate();
+			if (rowsAffected > 0) {
+				return new Validation(true, "Success", "Offer created successfully and moved to offer list.");	
+			} else {
+				return new Validation(false, "Error", "An error occurred while creating the offer. Please try again.");
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return new Validation(false, "Error", "An error occurred while creating the offer. Please try again.");
+		}
 	}
 	
 	public static boolean acceptOffer(int offerId) {
