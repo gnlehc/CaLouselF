@@ -22,6 +22,7 @@ public class AdminHomePage {
 
     public AdminHomePage(Stage stage) {
         this.stage = stage;
+        this.stage.setTitle("Admin Homepage");
         initialize();
         setupUI();
         setLayout();
@@ -135,7 +136,6 @@ public class AdminHomePage {
     private void handleLogout() {
         LoginPage loginPage = new LoginPage(stage);
         stage.setScene(loginPage.getScene());
-        stage.setTitle("Login");
     }
 
     private void showAlert(String title, String message) {
