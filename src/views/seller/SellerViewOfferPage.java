@@ -87,10 +87,16 @@ public class SellerViewOfferPage {
         
         tableView.setItems(offers);
         
+        Button acceptOfferButton = new Button("Accept Offer");
+		acceptOfferButton.setOnAction(event -> handleBack());
+		
+		Button declineOfferButton = new Button("Decline Offer");
+		declineOfferButton.setOnAction(event -> handleBack());
+        
         Button backButton = new Button("Back");
 		backButton.setOnAction(event -> handleBack());
 		
-		vbox.getChildren().addAll(tableView, backButton);
+		vbox.getChildren().addAll(tableView, acceptOfferButton, declineOfferButton, backButton);
         return vbox;
 	}
 	
